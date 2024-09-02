@@ -28,3 +28,4 @@ My product will utilize AI to help them better organize their thoughts, and redu
 
 - **WebSocket**: Livestream AI-generated content to the user interface, showing real-time typing effect as the AI writes.
 
+![rough outline of site design](./draft_of_site.png)
