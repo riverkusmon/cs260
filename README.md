@@ -30,6 +30,10 @@ My product will utilize AI to help them better organize their thoughts, and redu
 
 ![rough outline of site design](images/draft_of_site.png)
 
-## What I learned Sep 28
+## Deliverables Sep 28
 - I learned how to deploy code to AWS
 - I learned how to build out a basic html app
+- I updated my project to have a bunch of HTML pages
+- I gave those pages scaffolding for the content I want to add
+- I provided links to each page with a navbar
+- I served my github links to the footer
