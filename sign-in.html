@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Grant Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 <header>
@@ -15,16 +18,20 @@
         </ul>
     </nav>
 </header>
-<p>sign in</p>
-<label>Username
-<input/>
-</label>
-<label>Password
-    <input/>
-</label>
+<main class="container fade-in">
+    <h1>Sign In</h1>
+    <form class="card">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
 
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">Sign In</button>
+    </form>
+</main>
 <footer>
-<a href="https://github.com/riverkusmon/cs260">Andrew's github</a>
+    <p>&copy; 2024 Grant Management System | <a href="https://github.com/riverkusmon/cs260">Andrew's GitHub</a></p>
 </footer>
 </body>
 </html>
