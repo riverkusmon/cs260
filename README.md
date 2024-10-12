@@ -37,3 +37,12 @@ My product will utilize AI to help them better organize their thoughts, and redu
 - I gave those pages scaffolding for the content I want to add
 - I provided links to each page with a navbar
 - I served my github links to the footer
+
+
+## Deliverables Oct 12
+- I learned how to organize elements with css
+- I learned how to get a better font for my site
+- I learned how to style elements with css
+- I learned how to use grids
+- I learned how to use css for image manipulation
+- I learned how much better css makes a site look
