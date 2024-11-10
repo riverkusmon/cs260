@@ -4,7 +4,7 @@ export default function Home() {
     return (
         <main className="container fade-in">
             <h1>Welcome to the Grant Management System</h1>
-            <img src="../images/writing_grant.png" alt="Writing a grant" className="hero-image" />
+            <img src="/writing_grant.png" alt="Writing a grant" className="hero-image" />
 
             <DashboardGrid />
 
