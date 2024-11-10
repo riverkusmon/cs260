@@ -10,3 +10,11 @@ export function Navigation() {
         </nav>
     );
 }
+
+export function Footer() {
+    return (
+        <footer>
+            <p>&copy; 2024 Grant Management System | <a href="https://github.com/riverkusmon/cs260">Andrew's GitHub</a></p>
+        </footer>
+    );
+}
