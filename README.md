@@ -52,3 +52,4 @@ My product will utilize AI to help them better organize their thoughts, and redu
 - i learned how to convert html to vite
 - i learned we need the base index.html for the page to initially inject all our stuff
 - i learned how to use react router
+- i learned how to use react hooks
