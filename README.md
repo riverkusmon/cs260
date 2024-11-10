@@ -49,4 +49,6 @@ My product will utilize AI to help them better organize their thoughts, and redu
 
 ## Startup react learnings
 - i learned how to deploy a react app to AWS
+- i learned how to convert html to vite
+- i learned we need the base index.html for the page to initially inject all our stuff
 - 
