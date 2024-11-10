@@ -46,3 +46,7 @@ My product will utilize AI to help them better organize their thoughts, and redu
 - I learned how to use grids
 - I learned how to use css for image manipulation
 - I learned how much better css makes a site look
+
+## Startup react learnings
+- i learned how to deploy a react app to AWS
+- 
