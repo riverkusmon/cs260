@@ -1,11 +1,31 @@
+import { useState, useEffect } from 'react';
+
 export default function PreviousGrants() {
-    const grants = [
-        { name: "Community Development Grant", amount: "$50,000", date: "2023-05-15", status: "Approved" },
-        { name: "Environmental Research Fund", amount: "$75,000", date: "2023-08-22", status: "In Progress" },
-        { name: "Educational Technology Initiative", amount: "$100,000", date: "2024-01-10", status: "Pending" },
-        { name: "Public Health Awareness Campaign", amount: "$60,000", date: "2023-11-30", status: "Approved" },
-        { name: "Renewable Energy Project", amount: "$120,000", date: "2024-02-28", status: "In Review" },
-    ];
+    const [grants, setGrants] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchGrants = async () => {
+            try {
+                const response = await fetch('/api/grants');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch grants');
+                }
+                const data = await response.json();
+                setGrants(data);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchGrants();
+    }, []);
+
+    if (loading) return <main className="container"><div>Loading grants...</div></main>;
+    if (error) return <main className="container"><div>Error: {error}</div></main>;
 
     return (
         <main className="container fade-in">
@@ -24,8 +44,8 @@ export default function PreviousGrants() {
                     {grants.map((grant, index) => (
                         <tr key={index}>
                             <td>{grant.name}</td>
-                            <td>{grant.amount}</td>
-                            <td>{grant.date}</td>
+                            <td>${grant.amount.toLocaleString()}</td>
+                            <td>{new Date(grant.date).toLocaleDateString()}</td>
                             <td>{grant.status}</td>
                         </tr>
                     ))}
