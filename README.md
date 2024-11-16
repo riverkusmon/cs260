@@ -58,4 +58,6 @@ My product will utilize AI to help them better organize their thoughts, and redu
 - i learned how to deploy a server to aws
 - i learned how to implement express in my project
 - i learned how to use routes in express
-- 
+- i learned how to proxy a fetch through my server to an external api
+- i learned how to use an external api
+- i learned how important components are to scalability
