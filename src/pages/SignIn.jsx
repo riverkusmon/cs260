@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function SignIn() {
@@ -7,6 +7,7 @@ export default function SignIn() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [motivationalMessage, setMotivationalMessage] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -38,8 +39,27 @@ export default function SignIn() {
         }
     };
 
+    useEffect(() => {
+        async function getMessage() {
+            try {
+                const response = await fetch('/api/affirmation');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch affirmation');
+                }
+                const data = await response.json();
+                setMotivationalMessage(data.affirmation);
+            } catch (err) {
+                setMotivationalMessage('You got this! ✨');
+                console.error('Error fetching affirmation:', err);
+            }
+        }
+        getMessage();
+    }, []);
+
     return (
         <main className="container fade-in">
+            <h1>Here&apos;s something to brighten your day!</h1>
+            <p>{motivationalMessage}</p>
             <h1>Sign In</h1>
             {error && <div className="error-message">{error}</div>}
             <form className="card" onSubmit={handleSubmit}>
