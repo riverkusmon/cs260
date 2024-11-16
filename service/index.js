@@ -73,6 +73,16 @@ apiRouter.put('/grants/:id', (req, res) => {
     }
 });
 
+apiRouter.get('/affirmation', async (_req, res) => {
+    try {
+        const response = await fetch('https://www.affirmations.dev/');
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to fetch affirmation', error: error.message });
+    }
+});
+
 app.use((_req, res) => {
     res.sendFile('index.html', { root: 'public' });
 });
