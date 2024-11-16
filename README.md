@@ -53,3 +53,9 @@ My product will utilize AI to help them better organize their thoughts, and redu
 - i learned we need the base index.html for the page to initially inject all our stuff
 - i learned how to use react router
 - i learned how to use react hooks
+
+## Startup service learnings
+- i learned how to deploy a server to aws
+- i learned how to implement express in my project
+- i learned how to use routes in express
+- 
