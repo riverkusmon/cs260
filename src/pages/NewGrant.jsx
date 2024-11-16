@@ -1,19 +1,51 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function NewGrant() {
+    const navigate = useNavigate();
     const [name, setName] = useState('');
     const [amount, setAmount] = useState('');
     const [date, setDate] = useState('');
     const [description, setDescription] = useState('');
+    const [submitting, setSubmitting] = useState(false);
+    const [error, setError] = useState(null);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log({ name, amount, date, description });
+        setSubmitting(true);
+        setError(null);
+
+        try {
+            const response = await fetch('/api/grants', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name,
+                    amount,
+                    date,
+                    description
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to submit grant');
+            }
+
+            await response.json();
+            navigate('/previous-grants');
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return (
         <main className="container fade-in">
             <h1>New Grant Application</h1>
+            {error && <div className="error-message">{error}</div>}
             <form className="card" onSubmit={handleSubmit}>
                 <label htmlFor="grantName">Grant Name</label>
                 <input
@@ -51,7 +83,9 @@ export default function NewGrant() {
                     required
                 />
 
-                <button type="submit">Submit Application</button>
+                <button type="submit" disabled={submitting}>
+                    {submitting ? 'Submitting...' : 'Submit Application'}
+                </button>
             </form>
         </main>
     );
