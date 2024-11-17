@@ -1,0 +1,16 @@
+{
+  "name": "cs260",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "This demonstrates a service for a web application.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "uuid": "^10.0.0"
+  }
+}
