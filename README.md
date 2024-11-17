@@ -61,3 +61,4 @@ My product will utilize AI to help them better organize their thoughts, and redu
 - i learned how to proxy a fetch through my server to an external api
 - i learned how to use an external api
 - i learned how important components are to scalability
+- figured out that you need a separate package.json for the server
