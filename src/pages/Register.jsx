@@ -1,25 +1,43 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../components/AuthContext';
 
 export default function Register() {
     const navigate = useNavigate();
+    const { setUser } = useContext(AuthContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         try {
-            const response = await fetch('/api/auth/register', {
+            const registerResponse = await fetch('/api/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password }),
             });
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.message);
-            navigate('/sign-in');
+            const registerData = await registerResponse.json();
+            if (!registerResponse.ok) throw new Error(registerData.message);
+
+            const loginResponse = await fetch('/api/auth/signin', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password }),
+            });
+            const loginData = await loginResponse.json();
+            if (!loginResponse.ok) throw new Error(loginData.message);
+
+            localStorage.setItem('user', JSON.stringify(loginData));
+            setUser(loginData);
+            navigate('/');
+
         } catch (err) {
             setError(err.message);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -44,7 +62,9 @@ export default function Register() {
                     onChange={e => setPassword(e.target.value)}
                     required
                 />
-                <button type="submit">Register</button>
+                <button type="submit" disabled={loading}>
+                    {loading ? 'Registering...' : 'Register'}
+                </button>
             </form>
         </main>
     );
