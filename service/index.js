@@ -1,26 +1,26 @@
 import express from 'express';
 import { MongoClient } from 'mongodb';
 import { readFile } from 'fs/promises';
+import bcrypt from 'bcrypt';
 
 const config = JSON.parse(
     await readFile(new URL('./dbConfig.json', import.meta.url))
 );
 
-import bcrypt from 'bcrypt';
-
 const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}`;
-const client = new MongoClient(url);
+const client = new MongoClient(url, { tls: true, serverSelectionTimeoutMS: 3000, autoSelectFamily: false, });
 const db = client.db('grantDB');
 const grantsCollection = db.collection('grants');
 const usersCollection = db.collection('users');
 
-try {
+(async function testConnection() {
     await client.connect();
     await db.command({ ping: 1 });
     console.log('Connected to MongoDB');
-} catch (error) {
-    console.error('MongoDB connection error:', error);
-}
+})().catch((ex) => {
+    console.log(`Unable to connect to database with ${url} because ${ex.message}`);
+    process.exit(1);
+});
 
 const app = express();
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
