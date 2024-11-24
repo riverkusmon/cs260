@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../components/AuthContext';
 
 export default function SignIn() {
     const navigate = useNavigate();
+    const { setUser } = useContext(AuthContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
@@ -29,6 +31,7 @@ export default function SignIn() {
             }
 
             localStorage.setItem('user', JSON.stringify(data));
+            setUser(data);
 
             navigate('/');
         } catch (err) {
