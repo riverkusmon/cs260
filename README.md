@@ -67,3 +67,4 @@ My product will utilize AI to help them better organize their thoughts, and redu
 - I learned how to add mongoDB to my project
 - I learned how to connect to mongoDB
 - I learned how to set up a mongoDB database
+- I learned how to use bcrypt to hash passwords
