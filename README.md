@@ -62,3 +62,8 @@ My product will utilize AI to help them better organize their thoughts, and redu
 - i learned how to use an external api
 - i learned how important components are to scalability
 - figured out that you need a separate package.json for the server
+
+## Startup login learnings
+- I learned how to add mongoDB to my project
+- I learned how to connect to mongoDB
+- I learned how to set up a mongoDB database
