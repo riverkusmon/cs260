@@ -1,7 +1,24 @@
 import express from 'express';
+import { MongoClient } from 'mongodb';
+import config from './dbConfig.json';
+
+const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}`;
+const client = new MongoClient(url);
+const db = client.db('grantDB');
+const grantsCollection = db.collection('grants');
+const usersCollection = db.collection('users');
+
+try {
+    await client.connect();
+    await db.command({ ping: 1 });
+    console.log('Connected to MongoDB');
+} catch (error) {
+    console.error('MongoDB connection error:', error);
+}
 
 const app = express();
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
+
 
 let grants = [
     { name: "Community Development Grant", amount: 50000, date: "2023-05-15", status: "Approved" },
