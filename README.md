@@ -69,3 +69,7 @@ My product will utilize AI to help them better organize their thoughts, and redu
 - I learned how to set up a mongoDB database
 - I learned how to use bcrypt to hash passwords
 - figured out i need to import json super weirdly
+- learned about context in react
+- learned how to use context in react
+- learned how to protect routes in react
+- learned how to use cookies in react
