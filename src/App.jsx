@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import PreviousGrants from './pages/PreviousGrants';
 import NewGrant from './pages/NewGrant';
 import SignIn from './pages/SignIn';
+import Register from "./pages/Register.jsx";
 
 export default function App() {
     return (
@@ -17,6 +18,7 @@ export default function App() {
                     <Route path="/previous-grants" element={<PreviousGrants />} />
                     <Route path="/new-grant" element={<NewGrant />} />
                     <Route path="/sign-in" element={<SignIn />} />
+                    <Route path="/register" element={<Register />} />
                 </Routes>
                 <Footer />
             </>

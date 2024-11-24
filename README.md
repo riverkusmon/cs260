@@ -68,3 +68,4 @@ My product will utilize AI to help them better organize their thoughts, and redu
 - I learned how to connect to mongoDB
 - I learned how to set up a mongoDB database
 - I learned how to use bcrypt to hash passwords
+- figured out i need to import json super weirdly
