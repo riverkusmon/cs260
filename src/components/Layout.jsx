@@ -1,13 +1,19 @@
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
+import {AuthContext} from "./AuthContext.jsx";
 
 export function Navigation() {
     const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('user'));
+    const { user } = useContext(AuthContext);
 
     const handleLogout = () => {
                 localStorage.removeItem('user');
                 setIsLoggedIn(false);
                 window.location.href = '/sign-in';
     };
+
+    useEffect(() => {
+        setIsLoggedIn(!!user);
+    }, [user]);
 
     return (
         <nav>
@@ -21,7 +27,7 @@ export function Navigation() {
                         <li><a href="/register">Register</a></li>
                     </>
                 ) : (
-                    <li><button onClick={handleLogout}>Logout</button></li>
+                    <li><a onClick={handleLogout}>Logout</a></li>
                 )}
             </ul>
         </nav>
