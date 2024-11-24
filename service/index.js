@@ -1,6 +1,12 @@
 import express from 'express';
 import { MongoClient } from 'mongodb';
-import config from './dbConfig.json';
+import { readFile } from 'fs/promises';
+
+const config = JSON.parse(
+    await readFile(new URL('./dbConfig.json', import.meta.url))
+);
+
+import bcrypt from 'bcrypt';
 
 const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}`;
 const client = new MongoClient(url);
@@ -34,12 +40,35 @@ app.use(express.static('public'));
 const apiRouter = express.Router();
 app.use('/api', apiRouter);
 
-apiRouter.post('/auth/signin', (req, res) => {
+apiRouter.post('/auth/register', async (req, res) => {
     const { username, password } = req.body;
-    if (username && password) {
+    try {
+        const existingUser = await usersCollection.findOne({ username });
+        if (existingUser) {
+            return res.status(409).json({ success: false, message: 'Username already exists' });
+        }
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await usersCollection.insertOne({ username, password: hashedPassword });
         res.json({ success: true, username });
-    } else {
-        res.status(401).json({ success: false, message: 'Invalid credentials' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+apiRouter.post('/auth/signin', async (req, res) => {
+    const { username, password } = req.body;
+    try {
+        const user = await usersCollection.findOne({ username });
+        if (!user) {
+            return res.status(401).json({ success: false, message: 'Invalid credentials' });
+        }
+        const valid = await bcrypt.compare(password, user.password);
+        if (!valid) {
+            return res.status(401).json({ success: false, message: 'Invalid credentials' });
+        }
+        res.json({ success: true, username });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
     }
 });
 
@@ -53,22 +82,30 @@ apiRouter.get('/dashboard/stats', (_req, res) => {
     res.json(stats);
 });
 
-apiRouter.get('/grants', (_req, res) => {
-    res.json(grants);
+apiRouter.get('/grants', async (_req, res) => {
+    try {
+        const grants = await grantsCollection.find({}).toArray();
+        res.json(grants);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 });
 
-apiRouter.post('/grants', (req, res) => {
-    const { name, amount, date, description } = req.body;
-    const newGrant = {
-        name,
-        amount: Number(amount),
-        date,
-        description,
-        status: "Pending"
-    };
-    grants.push(newGrant);
-    res.json(newGrant);
-});
+apiRouter.post('/grants', async (req, res) => {
+    const {name, amount, date, description} = req.body;
+    try {
+        const newGrant = {
+            name,
+            amount: Number(amount),
+            date,
+            description,
+            status: "Pending"
+        };
+        const result = await grantsCollection.insertOne(newGrant);
+        res.json(newGrant);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }});
 
 apiRouter.get('/grants/:id', (req, res) => {
     const grant = grants[req.params.id];
