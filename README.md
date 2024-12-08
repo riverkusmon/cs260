@@ -73,3 +73,12 @@ My product will utilize AI to help them better organize their thoughts, and redu
 - learned how to use context in react
 - learned how to protect routes in react
 - learned how to use cookies in react
+
+## Startup web socket learnings
+- I learned how to set up a web socket server
+- I learned how to connect to a web socket server
+- I learned how to use web sockets to send messages
+- I learned that I need to have a separate server for web sockets
+- I learned how to make things essentially real time with web sockets
+- I learned how to use openai's api
+- I learned how to stream data from openai's api to the client
