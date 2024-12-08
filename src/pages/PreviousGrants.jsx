@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 export default function PreviousGrants() {
     const [grants, setGrants] = useState([]);
@@ -50,8 +51,10 @@ export default function PreviousGrants() {
                             <strong>Status:</strong> {selectedGrant.status}
                         </div>
 
-                        <div className="border-t pt-4 whitespace-pre-wrap">
-                            {selectedGrant.description || 'No proposal description available.'}
+                        <div className="border-t pt-4 prose prose-sm max-w-none">
+                            <ReactMarkdown>
+                                {selectedGrant.description || 'No proposal description available.'}
+                            </ReactMarkdown>
                         </div>
                     </div>
                 </div>
