@@ -1,7 +1,11 @@
 import express from 'express';
+import { WebSocketServer } from 'ws';
+import { createServer } from 'http';
 import { MongoClient } from 'mongodb';
 import { readFile } from 'fs/promises';
 import bcrypt from 'bcrypt';
+import OpenAI from 'openai';
+
 
 const config = JSON.parse(
     await readFile(new URL('./dbConfig.json', import.meta.url))
@@ -22,9 +26,120 @@ const usersCollection = db.collection('users');
     process.exit(1);
 });
 
-const app = express();
-const port = process.argv.length > 2 ? process.argv[2] : 4000;
+const openai = new OpenAI({
+    apiKey: config.openai
+});
 
+const app = express();
+const httpServer = createServer(app);
+const wss = new WebSocketServer({ server: httpServer });
+
+wss.on('connection', (ws) => {
+    console.log('New client connected');
+
+    ws.on('message', async (message) => {
+        console.log('Received raw message:', message.toString());
+        try {
+            const data = JSON.parse(message);
+            console.log('Parsed data:', data);
+
+            if (data.type === 'WRITE_GRANT') {
+                console.log('Processing grant writing request:', data.projectIdea);
+
+                try {
+                    const stream = await openai.chat.completions.create({
+                        model: 'gpt-4o-mini',
+                        messages: [
+                            {
+                                role: 'system',
+                                content: 'You are an experienced grant writer who helps create compelling grant proposals.'
+                            },
+                            {
+                                role: 'user',
+                                content: createGrantPrompt(data.projectIdea)
+                            }
+                        ],
+                        stream: true,
+                        temperature: 0.7,
+                        max_tokens: 2000
+                    });
+
+                    let fullResponse = '';
+                    for await (const chunk of stream) {
+                        const content = chunk.choices[0]?.delta?.content || '';
+                        if (content) {
+                            fullResponse += content;
+                            ws.send(JSON.stringify({
+                                type: 'AI_SUGGESTION',
+                                suggestion: fullResponse,
+                                metadata: {
+                                    name: data.details.name,
+                                    amount: data.details.requestedAmount,
+                                    date: data.details.proposalDate
+                                }
+                            }));
+                        }
+                    }
+
+                    ws.send(JSON.stringify({
+                        type: 'WRITING_COMPLETE',
+                        finalProposal: fullResponse
+                    }));
+
+                } catch (error) {
+                    console.error('OpenAI API error:', error);
+                    ws.send(JSON.stringify({
+                        type: 'ERROR',
+                        message: 'Error generating grant proposal: ' + error.message
+                    }));
+                }
+            }
+        } catch (error) {
+            console.error('Error processing message:', error);
+            ws.send(JSON.stringify({
+                type: 'ERROR',
+                message: 'Error processing your message: ' + error.message
+            }));
+        }
+    });
+
+    ws.on('error', (error) => {
+        console.error('WebSocket error:', error);
+    });
+
+    ws.on('close', () => {
+        console.log('Client disconnected');
+    });
+});
+
+function createGrantPrompt(description) {
+    return `Create a professional grant proposal for the following project: "${description}"
+
+    Please structure the proposal with the following sections, using markdown formatting:
+
+    # Executive Summary
+
+    # Project Description
+
+    # Goals and Objectives
+
+    # Methodology and Implementation
+
+    # Expected Outcomes and Impact
+
+    # Budget Justification
+
+    # Timeline
+
+    # Evaluation Plan
+
+    Important guidelines:
+    - Be specific and data-driven where possible
+    - Use professional language suitable for grant reviewers
+    - Focus on measurable outcomes and impact
+    - Keep the total response detailed but concise
+    - Use markdown formatting for better readability`;
+}
 
 let grants = [
     { name: "Community Development Grant", amount: 50000, date: "2023-05-15", status: "Approved" },
@@ -105,7 +220,8 @@ apiRouter.post('/grants', async (req, res) => {
         res.json(newGrant);
     } catch (error) {
         res.status(500).json({message: error.message});
-    }});
+    }
+});
 
 apiRouter.get('/grants/:id', (req, res) => {
     const grant = grants[req.params.id];
@@ -141,6 +257,7 @@ app.use((_req, res) => {
     res.sendFile('index.html', { root: 'public' });
 });
 
-app.listen(port, () => {
-    console.log(`Listening on port ${port}`);
+const port = process.argv.length > 2 ? process.argv[2] : 4000;
+httpServer.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 });
