@@ -82,3 +82,4 @@ My product will utilize AI to help them better organize their thoughts, and redu
 - I learned how to make things essentially real time with web sockets
 - I learned how to use openai's api
 - I learned how to stream data from openai's api to the client
+- I learned how to display markdown in react
